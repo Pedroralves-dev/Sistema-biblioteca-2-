@@ -37,6 +37,17 @@ def cadastrar_livro(acervo,autor,ano,isbn,titulo):
     acervo.append(novo_livro)
     return True, f"Livro {titulo} foi cadastrado!!"
 
+def emprestar_livro(acervo,livro,isbn,):
+    for livro in acervo:
+        if livro["isbn"] == isbn:
+
+
+            if livro["status"] == "Disponivel":
+                livro["status"] = "Emprestado"
+                return True, f"Livro emprestado com sucesso!!"
+            else:
+                return False, " Este livro já está emprestado"
+    return False, "Livro não encontrado!"
 
 
 

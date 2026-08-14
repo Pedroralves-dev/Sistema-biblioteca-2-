@@ -9,11 +9,14 @@ colunas_planilha = ["Titulo", "Autor", "ISBN", "Ano", "Status"]
 
 
 def carregar_livros(nome_arquivo):
+    # Cria uma lista para armazenar os livros carregados
     livros = []
 
+    # Verifica se o arquivo já existe
     if not os.path.exists(nome_arquivo):
         return livros
 
+    # Abre o arquivo para fazer a leitura dos livros
     with open(nome_arquivo, mode="r", newline="", encoding="utf-8") as arquivo:
         leitor = csv.DictReader(arquivo)
 
@@ -24,21 +27,26 @@ def carregar_livros(nome_arquivo):
 
 
 def salvar_livros(nome_arquivo, livros):
+    # Abre o arquivo para salvar os livros cadastrados
     with open(nome_arquivo, mode="w", newline="", encoding="utf-8") as arquivo:
         escritor = csv.DictWriter(arquivo, fieldnames=colunas_planilha)
 
+        # Escreve os cabeçalhos no arquivo
         escritor.writeheader()
 
+        # Salva cada livro no arquivo
         for livro in livros:
             escritor.writerow(livro)
 
 
 def cadastrar_livro(acervo, titulo, autor, isbn, ano):
 
+    # Verifica se já existe um livro com o mesmo ISBN
     for livro in acervo:
         if livro["ISBN"] == isbn:
             return False, "Um livro com esse ISBN já foi cadastrado!"
 
+    # Cria um novo livro com as informações recebidas
     novo_livro = {
         "ISBN": isbn,
         "Titulo": titulo,
@@ -47,6 +55,7 @@ def cadastrar_livro(acervo, titulo, autor, isbn, ano):
         "Status": "Disponivel"
     }
 
+    # Adiciona o novo livro ao acervo
     acervo.append(novo_livro)
 
     return True, f"Livro {titulo} foi cadastrado!"
@@ -54,10 +63,12 @@ def cadastrar_livro(acervo, titulo, autor, isbn, ano):
 
 def emprestar_livro(acervo, isbn):
 
+    # Procura o livro pelo ISBN informado
     for livro in acervo:
 
         if livro["ISBN"] == isbn:
 
+            # Verifica se o livro está disponível para empréstimo
             if livro["Status"] == "Disponivel":
                 livro["Status"] = "Emprestado"
                 return True, "Livro emprestado com sucesso!"
@@ -70,10 +81,12 @@ def emprestar_livro(acervo, isbn):
 
 def devolver_livro(acervo, isbn):
 
+    # Procura o livro pelo ISBN informado
     for livro in acervo:
 
         if livro["ISBN"] == isbn:
 
+            # Verifica se o livro está emprestado
             if livro["Status"] == "Emprestado":
                 livro["Status"] = "Disponivel"
                 return True, "Livro devolvido com sucesso!"
@@ -86,8 +99,10 @@ def devolver_livro(acervo, isbn):
 
 def buscar_livro(acervo, busca):
 
+    # Cria uma lista para guardar os livros encontrados
     encontrados = []
 
+    # Percorre o acervo procurando pelo título ou autor
     for livro in acervo:
 
         if (busca.lower() in livro["Titulo"].lower()
@@ -100,6 +115,7 @@ def buscar_livro(acervo, busca):
 
 def ordenar_livros(acervo, criterio):
 
+    # Ordena os livros de acordo com o critério escolhido
     if criterio == 1:
 
         for i in range(len(acervo)):
@@ -136,12 +152,14 @@ def ordenar_livros(acervo, criterio):
 
 def listar_livros(acervo):
 
+    # Verifica se existem livros cadastrados
     if len(acervo) == 0:
         print("Nenhum livro cadastrado.")
         return
 
     print("\n========== ACERVO ==========\n")
 
+    # Percorre o acervo mostrando as informações dos livros
     for livro in acervo:
 
         print(f"Título : {livro['Titulo']}")
@@ -154,8 +172,10 @@ def listar_livros(acervo):
 
 # Programa principal
 
+# Carrega os livros salvos no arquivo ao iniciar o programa
 acervo = carregar_livros(nome_planilha)
 
+# Mantém o menu funcionando até o usuário escolher sair
 while True:
 
     print("\n========== BIBLIOTECA ==========")
